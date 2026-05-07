@@ -4,7 +4,7 @@ services:
     image: audio2srt:latest
     container_name: audio2srt
     ports:
-      - "8000:8000"
+      - "8005:8000"
     environment:
       - HF_HOME=/models/.cache/huggingface
       - WHISPER_MODEL=large-v3

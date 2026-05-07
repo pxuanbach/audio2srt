@@ -38,7 +38,7 @@ Requires: NVIDIA GPU + CUDA Toolkit 12.x. Without GPU, set `WHISPER_DEVICE=cpu`.
 Upload an audio file → receive `.srt` as downloadable file.
 
 ```bash
-curl -X POST "http://localhost:8000/transcribe" -F "file=@audio.mp3"
+curl -X POST "http://localhost:8005/transcribe" -F "file=@audio.mp3"
 ```
 
 **Supported formats:** mp3, wav, m4a, flac, ogg, webm, mp4, … (anything ffmpeg can decode)
@@ -55,7 +55,7 @@ curl -X POST "http://localhost:8000/transcribe" -F "file=@audio.mp3"
 import requests
 
 with open("audio.mp3", "rb") as f:
-    resp = requests.post("http://localhost:8000/transcribe", files={"file": f})
+    resp = requests.post("http://localhost:8005/transcribe", files={"file": f})
 
 with open("audio.srt", "wb") as out:
     out.write(resp.content)

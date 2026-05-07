@@ -1,7 +1,7 @@
 """Test script — sends an audio file to the API and saves the returned .srt."""
 import requests
 
-URL = "http://localhost:8000/transcribe"
+URL = "http://localhost:8005/transcribe"
 AUDIO_PATH = "test_audio.mp3"   # ← replace with your actual file
 
 with open(AUDIO_PATH, "rb") as f:
