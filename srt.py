@@ -3,8 +3,10 @@
 from datetime import timedelta
 
 
-def format_time(td: timedelta) -> str:
-    """Format timedelta to SRT timestamp: HH:MM:SS,mmm"""
+def format_time(td) -> str:
+    """Format timedelta (or float in seconds) to SRT timestamp: HH:MM:SS,mmm"""
+    if isinstance(td, float):
+        td = timedelta(seconds=td)
     total_ms = int(td.total_seconds() * 1000)
     hours, remainder = divmod(total_ms, 3600 * 1000)
     minutes, remainder = divmod(remainder, 60 * 1000)

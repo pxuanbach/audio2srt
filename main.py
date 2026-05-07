@@ -9,7 +9,7 @@ from datetime import timedelta
 from pathlib import Path
 
 from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import FileResponse
+from fastapi.responses import StreamingResponse
 import faster_whisper
 
 app = FastAPI(title="Audio2SRT API", version="1.0.0")
@@ -87,10 +87,10 @@ async def transcribe(file: UploadFile = File(...)):
 
         # Return as downloadable file
         srt_name = Path(file.filename).stem + ".srt"
-        return FileResponse(
-            content=srt_content.encode("utf-8"),
+        return StreamingResponse(
+            iter([srt_content.encode("utf-8")]),
             media_type="application/x-subrip",
-            filename=srt_name,
+            headers={"Content-Disposition": f"attachment; filename={srt_name}"},
         )
     finally:
         os.unlink(tmp_path)
