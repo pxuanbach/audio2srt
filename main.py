@@ -15,8 +15,8 @@ app = FastAPI(title="Audio2SRT API", version="1.0.0")
 
 # ── config ────────────────────────────────────────────────────────────────────
 MODEL_SIZE = os.getenv("WHISPER_MODEL", "large-v3")   # tiny/base/small/medium/large-v3
-DEVICE     = os.getenv("WHISPER_DEVICE", "cuda")       # cuda / cpu
-COMPUTE    = os.getenv("WHISPER_COMPUTE", "float16")   # float16 / int8
+DEVICE     = os.getenv("WHISPER_DEVICE", "cuda")        # cuda / cpu
+COMPUTE    = os.getenv("WHISPER_COMPUTE", "float16")    # float16 / int8
 
 # Cache the model at startup
 print(f"Loading Faster-Whisper model: {MODEL_SIZE} on {DEVICE}…")
@@ -30,6 +30,7 @@ print("Model loaded.")
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 def format_srt_time(td) -> str:
+    """Convert timedelta to SRT timestamp: HH:MM:SS,mmm"""
     total_ms = int(td.total_seconds() * 1000)
     h, rem = divmod(total_ms, 3600 * 1000)
     m, rem = divmod(rem, 60 * 1000)
@@ -38,6 +39,7 @@ def format_srt_time(td) -> str:
 
 
 def segments_to_srt(segments) -> str:
+    """Build SRT string from whisper segments."""
     lines = []
     for i, seg in enumerate(segments, 1):
         start = format_srt_time(seg.start)
@@ -58,7 +60,7 @@ async def transcribe(file: UploadFile = File(...)):
     """
     suffix = Path(file.filename).suffix or ".mp3"
 
-    # Save uploaded file to a temp dir (auto-cleaned on process exit)
+    # Save uploaded file to a temp location (auto-cleaned on process exit)
     with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
         tmp_path = tmp.name
         content = await file.read()
@@ -70,10 +72,10 @@ async def transcribe(file: UploadFile = File(...)):
             tmp_path,
             language=None,          # auto-detect; set e.g. "vi" for Vietnamese
             beam_size=5,
-            vad_filter=True,         # voice activity detection
+            vad_filter=True,       # voice activity detection
         )
 
-        # materialise generator so we can check timing info
+        # Materialize generator so we can check timing info
         seg_list = list(segments)
         print(f"Transcribed: {info.language}, {len(seg_list)} segments")
 

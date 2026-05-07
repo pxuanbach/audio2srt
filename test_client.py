@@ -1,8 +1,8 @@
-"""Test script — gửi file audio lên API và nhận về .srt."""
+"""Test script — sends an audio file to the API and saves the returned .srt."""
 import requests
 
 URL = "http://localhost:8000/transcribe"
-AUDIO_PATH = "test_audio.mp3"   # ← đổi thành file thật của bạn
+AUDIO_PATH = "test_audio.mp3"   # ← replace with your actual file
 
 with open(AUDIO_PATH, "rb") as f:
     resp = requests.post(URL, files={"file": f})
