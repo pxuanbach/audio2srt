@@ -30,4 +30,6 @@ Thumbs.db
 *.m4a
 *.flac
 *.ogg
-*.srt
+
+# HuggingFace model cache (mounted volume)
+models/

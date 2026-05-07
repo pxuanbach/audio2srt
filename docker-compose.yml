@@ -6,9 +6,12 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - HF_HOME=/models/.cache/huggingface
       - WHISPER_MODEL=large-v3
       - WHISPER_DEVICE=cuda
       - WHISPER_COMPUTE=float16
+    volumes:
+      - ./models:/models
     deploy:
       resources:
         reservations:
@@ -17,7 +20,7 @@ services:
               count: 1
               capabilities: [gpu]
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      test: ["CMD", "/usr/bin/python3.11", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
       timeout: 10s
       retries: 3
