@@ -5,6 +5,7 @@ POST /transcribe → receives audio file, returns .srt
 
 import os
 import tempfile
+from datetime import timedelta
 from pathlib import Path
 
 from fastapi import FastAPI, UploadFile, File
@@ -30,7 +31,9 @@ print("Model loaded.")
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 def format_srt_time(td) -> str:
-    """Convert timedelta to SRT timestamp: HH:MM:SS,mmm"""
+    """Convert timedelta (or float in seconds) to SRT timestamp: HH:MM:SS,mmm"""
+    if isinstance(td, float):
+        td = timedelta(seconds=td)
     total_ms = int(td.total_seconds() * 1000)
     h, rem = divmod(total_ms, 3600 * 1000)
     m, rem = divmod(rem, 60 * 1000)
