@@ -1,0 +1,16 @@
+[project]
+name = "audio2srt"
+version = "1.0.0"
+description = "FastAPI server — Faster-Whisper audio to SRT"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "faster-whisper>=1.0.0",
+    "python-multipart>=0.0.12",
+    "aiofiles>=24.0.0",
+    "requests>=2.32.0",
+]
+
+[project.optional-dependencies]
+dev = []
