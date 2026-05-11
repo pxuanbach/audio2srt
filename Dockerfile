@@ -17,7 +17,6 @@ RUN /usr/bin/python3.11 -m pip install uv
 RUN UV_PYTHON=python3.11 uv lock && UV_PYTHON=python3.11 uv sync
 
 # Copy source
-COPY srt.py ./
 COPY main.py ./
 
 EXPOSE 8000

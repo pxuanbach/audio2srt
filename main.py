@@ -29,7 +29,7 @@ model = faster_whisper.WhisperModel(
 print("Model loaded.")
 
 
-# ── helpers ───────────────────────────────────────────────────────────────────
+# ── helpers ────────────────────────────────────────────────────────────────────
 def format_srt_time(td) -> str:
     """Convert timedelta (or float in seconds) to SRT timestamp: HH:MM:SS,mmm"""
     if isinstance(td, float):
@@ -52,7 +52,7 @@ def segments_to_srt(segments) -> str:
     return "\n".join(lines)
 
 
-# ── routes ────────────────────────────────────────────────────────────────────
+# ── routes ─────────────────────────────────────────────────────────────────────
 @app.post("/transcribe")
 async def transcribe(file: UploadFile = File(...)):
     """
@@ -76,6 +76,10 @@ async def transcribe(file: UploadFile = File(...)):
             language=None,          # auto-detect; set e.g. "vi" for Vietnamese
             beam_size=5,
             vad_filter=True,       # voice activity detection
+            vad_parameters=dict(
+                max_speech_duration_s=5,
+                min_silence_duration_ms=1000,
+            ),
         )
 
         # Materialize generator so we can check timing info
@@ -101,7 +105,7 @@ async def health():
     return {"status": "ok", "model": MODEL_SIZE, "device": DEVICE}
 
 
-# ── entrypoint ────────────────────────────────────────────────────────────────
+# ── entrypoint ─────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8005, reload=False)
